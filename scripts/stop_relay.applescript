@@ -1,0 +1,5 @@
+«event sysoexec» "launchctl bootout gui/$(id -u)/com.user.imessage_relay 2>/dev/null || true"
+«event sysoexec» "pkill -f 'StateLens_Chat_runtime/imessage_relay.py' 2>/dev/null || true"
+«event sysoexec» "pkill -f '/imessage_relay.py' 2>/dev/null || true"
+«event sysoexec» "pkill -f 'viewer_server.py' 2>/dev/null || true"
+«event sysonotf» "StateLens_Chat 停止しました" given «class appr»:"Antigravity"

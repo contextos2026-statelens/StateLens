@@ -1,0 +1,6 @@
+.DS_Store
+.agents/
+.env
+.env.*
+!.env.example
+scripts/start_terminal.command.save

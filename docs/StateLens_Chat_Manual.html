@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>State Lens : Chat 説明書</title>
+  <style>
+    :root {
+      --bg: #0b1220;
+      --panel: #111a2d;
+      --panel2: #0f1930;
+      --line: #2a3b5d;
+      --text: #e7eefc;
+      --muted: #9fb2d0;
+      --acc: #37d99a;
+      --warn: #ffcd57;
+      --chip: #1b2a48;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Hiragino Sans", "Noto Sans JP", "Segoe UI", sans-serif;
+      background: radial-gradient(circle at 80% 20%, #163a62 0, transparent 40%),
+                  radial-gradient(circle at 10% 80%, #1a365e 0, transparent 35%),
+                  var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 28px 18px 70px; }
+    .hero {
+      border: 1px solid var(--line);
+      background: linear-gradient(140deg, rgba(31,47,84,.7), rgba(18,29,53,.8));
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 18px;
+    }
+    h1 { margin: 0 0 10px; font-size: 1.8rem; }
+    h2 {
+      margin: 30px 0 12px;
+      border-left: 4px solid var(--acc);
+      padding-left: 10px;
+      font-size: 1.2rem;
+    }
+    h3 { margin: 18px 0 8px; font-size: 1rem; color: #b8d1f8; }
+    p, li { color: var(--text); }
+    .muted { color: var(--muted); }
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(17,26,45,.94), rgba(12,20,36,.96));
+      padding: 16px;
+      margin-top: 10px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 12px;
+    }
+    .card {
+      border: 1px solid var(--line);
+      background: var(--panel2);
+      border-radius: 10px;
+      padding: 12px;
+    }
+    .chip {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 999px;
+      background: var(--chip);
+      border: 1px solid var(--line);
+      color: #c8daff;
+      font-size: 12px;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+    }
+    pre {
+      background: #091426;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px;
+      overflow: auto;
+      color: #d2e3ff;
+    }
+    .warn {
+      border-left: 4px solid var(--warn);
+      background: rgba(255, 205, 87, 0.08);
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+    .steps li { margin-bottom: 6px; }
+    .imgbox {
+      border: 1px dashed #365688;
+      border-radius: 10px;
+      padding: 10px;
+      color: var(--muted);
+      background: rgba(18,30,56,.45);
+      margin-top: 8px;
+    }
+    .toc a { color: #9ee7ff; text-decoration: none; }
+    .toc a:hover { text-decoration: underline; }
+    .svg-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: #0a1529; padding: 8px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <h1>State Lens : Chat 説明書</h1>
+      <p class="muted">iMessageの会話を自動で取り込み、分析付きで見える化するアプリです。</p>
+      <div>
+        <span class="chip">iMessage Relay</span>
+        <span class="chip">リアルタイムViewer</span>
+        <span class="chip">OpenAI分析</span>
+        <span class="chip">参加者別タスク</span>
+      </div>
+    </section>
+
+    <section class="panel toc">
+      <strong>目次</strong>
+      <ul>
+        <li><a href="#what">1. どういうアプリか</a></li>
+        <li><a href="#screen">2. 画面の見方</a></li>
+        <li><a href="#howto">3. 使い方（起動〜停止）</a></li>
+        <li><a href="#daily">4. 日常運用（毎日やること）</a></li>
+        <li><a href="#trouble">5. トラブル時の対処</a></li>
+        <li><a href="#faq">6. よくある質問</a></li>
+      </ul>
+    </section>
+
+    <h2 id="what">1. どういうアプリか</h2>
+    <div class="panel">
+      <p>State Lens : Chat は、Mac上の iMessage を監視してサーバーへ転送し、Viewer で分析つき表示するアプリです。</p>
+      <div class="grid">
+        <div class="card">
+          <h3>できること</h3>
+          <ul>
+            <li>iMessageの新着を自動取得</li>
+            <li>感情・意図・話題を自動分析</li>
+            <li>参加者ごとのタスクを表示</li>
+            <li>thread単位メトリクスの表示</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>主な構成</h3>
+          <ul>
+            <li>Relay: <code>imessage_relay.py</code></li>
+            <li>Viewer API: <code>viewer_server.py</code></li>
+            <li>UI: <code>viewer/</code></li>
+            <li>起動: <code>StateLens_Chat 起動.app</code></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h2>処理フロー図</h2>
+    <div class="svg-wrap">
+      <svg width="980" height="220" viewBox="0 0 980 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="処理フロー図">
+        <defs>
+          <style>
+            .b{fill:#0f1f3a;stroke:#3f5f93;stroke-width:1.2}
+            .t{fill:#d9e7ff;font:14px sans-serif}
+            .s{fill:#9eb7da;font:12px sans-serif}
+            .a{stroke:#71d5ff;stroke-width:2;marker-end:url(#m)}
+          </style>
+          <marker id="m" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+            <path d="M0,0 L6,3 L0,6 Z" fill="#71d5ff"/>
+          </marker>
+        </defs>
+        <rect class="b" x="20" y="70" width="170" height="80" rx="10"/>
+        <text class="t" x="42" y="102">iMessage (chat.db)</text>
+        <text class="s" x="42" y="124">新着メッセージ</text>
+
+        <rect class="b" x="230" y="50" width="180" height="120" rx="10"/>
+        <text class="t" x="251" y="82">Relay</text>
+        <text class="s" x="251" y="104">imessage_relay.py</text>
+        <text class="s" x="251" y="124">JSON転送</text>
+
+        <rect class="b" x="450" y="50" width="180" height="120" rx="10"/>
+        <text class="t" x="474" y="82">Viewer Server</text>
+        <text class="s" x="474" y="104">viewer_server.py</text>
+        <text class="s" x="474" y="124">分析 + API</text>
+
+        <rect class="b" x="670" y="50" width="140" height="120" rx="10"/>
+        <text class="t" x="694" y="82">OpenAI API</text>
+        <text class="s" x="694" y="104">gpt-5-mini</text>
+        <text class="s" x="694" y="124">gpt-5.2</text>
+
+        <rect class="b" x="840" y="70" width="120" height="80" rx="10"/>
+        <text class="t" x="863" y="102">Browser UI</text>
+        <text class="s" x="863" y="124">192.168.4.33:8080</text>
+
+        <line class="a" x1="190" y1="110" x2="230" y2="110"/>
+        <line class="a" x1="410" y1="110" x2="450" y2="110"/>
+        <line class="a" x1="630" y1="90" x2="670" y2="90"/>
+        <line class="a" x1="630" y1="130" x2="670" y2="130"/>
+        <line class="a" x1="810" y1="110" x2="840" y2="110"/>
+      </svg>
+    </div>
+
+    <h2 id="screen">2. 画面の見方</h2>
+    <div class="panel">
+      <ul>
+        <li><strong>上部:</strong> threadごとのメトリクス（送信密度、話題密度など）</li>
+        <li><strong>中央:</strong> メッセージカード（送受信、本文、時刻）</li>
+        <li><strong>右パネル:</strong> 感情・意図・表現・自分のタスク・参加者ごとのタスク</li>
+        <li><strong>analysis_source:</strong> <code>openai:gpt-5-mini</code> などならAI分析、<code>fallback</code> は代替分析</li>
+      </ul>
+      <div class="imgbox">
+        スクリーンショットを入れる場合は、このHTMLと同じ階層に画像を置いて
+        <code>&lt;img src="./images/viewer_main.png"&gt;</code> のように追記してください。
+      </div>
+    </div>
+
+    <h2 id="howto">3. 使い方（起動〜停止）</h2>
+    <div class="panel">
+      <h3>起動</h3>
+      <ol class="steps">
+        <li><code>StateLens_Chat 起動.app</code> を実行</li>
+        <li>ブラウザで Viewer を開く（通常 <code>http://localhost:8080/</code>）</li>
+        <li>iMessage を1件送受信して反映確認</li>
+      </ol>
+
+      <h3>停止</h3>
+      <ol class="steps">
+        <li><code>StateLens_Chat 停止.app</code> を実行</li>
+      </ol>
+
+      <h3>全件再分析</h3>
+      <pre>curl -X POST http://192.168.4.33:8080/api/reanalyze \
+  -H "Content-Type: application/json" \
+  -d '{"scope":"all"}'</pre>
+    </div>
+
+    <h2 id="daily">4. 日常運用（毎日やること）</h2>
+    <div class="panel">
+      <ol class="steps">
+        <li>起動後に <code>analysis_source</code> が <code>openai:...</code> か確認</li>
+        <li>反映遅延がある場合は 10〜30秒待つ（解析キュー処理中）</li>
+        <li>必要時のみ全件再分析を実行</li>
+      </ol>
+      <h3>状態確認コマンド</h3>
+      <pre>curl -s http://192.168.4.33:8080/api/messages | python3 -c 'import sys,json;p=json.load(sys.stdin);m=p.get("meta",{});print("provider=",m.get("analysis_provider"),"openai=",m.get("openai_enabled"),"pending=",m.get("pending_count"))'</pre>
+    </div>
+
+    <h2 id="trouble">5. トラブル時の対処</h2>
+    <div class="panel">
+      <h3>fallbackのまま変わらない</h3>
+      <pre>tail -n 120 ~/Library/Logs/imessage_relay_launcher.log</pre>
+      <ul>
+        <li><code>401</code>: APIキー不正/失効</li>
+        <li><code>timed out</code>: タイムアウト（<code>OPENAI_TIMEOUT</code> を増やす）</li>
+        <li><code>400</code>: モデルパラメータ不一致</li>
+      </ul>
+
+      <h3>新着が取れない</h3>
+      <pre>cd "/Users/nishiokamahiro/Desktop/Antigravity/iMessage soujushin"
+./scripts/diagnose_relay_access.sh</pre>
+      <div class="warn">
+        <strong>ポイント:</strong> <code>authorization denied</code> が出る場合は、実行中の Python 実体にフルディスクアクセスが必要です。
+      </div>
+    </div>
+
+    <h2 id="faq">6. よくある質問</h2>
+    <div class="panel">
+      <h3>Q. 意図（intent）は何種類？</h3>
+      <p><code>request / report / ask / confirm / complain / share / plan / emotional_expression</code></p>
+
+      <h3>Q. participantタスクの判定は？</h3>
+      <p>本文の明示名・あだ名・送受信方向・条件付きルールを使って推定します。</p>
+
+      <h3>Q. 一人称の置換は？</h3>
+      <p><code>私/わたし/僕/俺</code> や <code>送信者/話者</code> を、該当メッセージの送信者人物名へ変換します。</p>
+    </div>
+  </div>
+</body>
+</html>

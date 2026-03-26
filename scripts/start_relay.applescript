@@ -1,0 +1,7 @@
+«event sysoexec» "launchctl bootout gui/$(id -u)/com.user.imessage_relay 2>/dev/null || true"
+«event sysoexec» "pkill -f 'viewer_server.py' 2>/dev/null || true"
+«event sysoexec» "pkill -f 'StateLens_Chat_runtime/imessage_relay.py' 2>/dev/null || true"
+«event sysoexec» "pkill -f '/imessage_relay.py' 2>/dev/null || true"
+«event sysoexec» "/usr/bin/open -a 'Terminal' '/Users/nishiokamahiro/Desktop/Antigravity/iMessage soujushin/scripts/start_terminal.command'"
+«event sysoexec» "sleep 1; /usr/bin/open 'http://localhost:8080/'"
+«event sysonotf» "StateLens_Chat 起動しました" given «class appr»:"Antigravity"
